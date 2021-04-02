@@ -1,13 +1,12 @@
 import cv2
 import threading
 import sys
-import time
 from PyQt5 import QtWidgets
 from PyQt5 import QtGui
-from PyQt5 import QtCore
 
 font = cv2.FONT_HERSHEY_TRIPLEX
 running = False
+
 def run():
     global frame
     global running
@@ -37,19 +36,22 @@ def run():
     cap.release()
     print("Thread end.")
 
+
 def stop():
     global running
     running = False
     print("stoped..")
 
+
 global i
 i = 0
-
 def capture():
+    global i
     fr = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    cv2.imwrite("file"+i+".jpg", fr)
-    print("caprure..")
+    cv2.imwrite("file_%d.jpg" %i, fr, params=[cv2.IMWRITE_JPEG_QUALITY,100])
     i += 1
+    print("caprure..")
+
 
 def start():
     global running
@@ -58,9 +60,11 @@ def start():
     th.start()
     print("started..")
 
+
 def onExit():
     print("exit")
     stop()
+
 
 app = QtWidgets.QApplication([])
 win = QtWidgets.QWidget()
