@@ -3,6 +3,7 @@ import threading
 import sys
 from PyQt5 import QtWidgets
 from PyQt5 import QtGui
+from PyQt5.QtWidgets import QLabel
 
 font = cv2.FONT_HERSHEY_TRIPLEX
 running = False
@@ -44,12 +45,12 @@ def stop():
 
 
 global i
-i = 0
+i = 8
 def capture():
     global i
     fr = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     cv2.imwrite("file_%d.jpg" %i, fr, params=[cv2.IMWRITE_JPEG_QUALITY,100])
-    i += 1
+    i += 8
     print("caprure..")
 
 
@@ -69,7 +70,7 @@ def onExit():
 app = QtWidgets.QApplication([])
 win = QtWidgets.QWidget()
 vbox = QtWidgets.QVBoxLayout()
-label = QtWidgets.QLabel()
+label: QLabel = QtWidgets.QLabel()
 btn_start = QtWidgets.QPushButton("Camera On")
 btn_capture = QtWidgets.QPushButton("Capture")
 vbox.addWidget(label)
