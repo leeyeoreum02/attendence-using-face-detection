@@ -8,14 +8,13 @@ from PyQt5.QtWidgets import QLabel
 font = cv2.FONT_HERSHEY_TRIPLEX
 running = False
 
+
 def run():
     global frame
     global running
     face_cascade = cv2.CascadeClassifier('haarcascade_frontface.xml')
     info = ''
     cap = cv2.VideoCapture(0)
-    cap.set(3, 640)
-    cap.set(4, 480)
     while running:
         ret, frame = cap.read()
         if ret:
@@ -66,21 +65,21 @@ def onExit():
     print("exit")
     stop()
 
+if __name__ == "__main__":
+    app = QtWidgets.QApplication([])
+    win = QtWidgets.QWidget()
+    vbox = QtWidgets.QVBoxLayout()
+    label: QLabel = QtWidgets.QLabel()
+    btn_start = QtWidgets.QPushButton("Camera On")
+    btn_capture = QtWidgets.QPushButton("Capture")
+    vbox.addWidget(label)
+    vbox.addWidget(btn_start)
+    vbox.addWidget(btn_capture)
+    win.setLayout(vbox)
+    win.show()
 
-app = QtWidgets.QApplication([])
-win = QtWidgets.QWidget()
-vbox = QtWidgets.QVBoxLayout()
-label: QLabel = QtWidgets.QLabel()
-btn_start = QtWidgets.QPushButton("Camera On")
-btn_capture = QtWidgets.QPushButton("Capture")
-vbox.addWidget(label)
-vbox.addWidget(btn_start)
-vbox.addWidget(btn_capture)
-win.setLayout(vbox)
-win.show()
+    btn_start.clicked.connect(start)
+    btn_capture.clicked.connect(capture)
+    app.aboutToQuit.connect(onExit)
 
-btn_start.clicked.connect(start)
-btn_capture.clicked.connect(capture)
-app.aboutToQuit.connect(onExit)
-
-sys.exit(app.exec_())
+    sys.exit(app.exec_())
