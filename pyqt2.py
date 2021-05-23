@@ -39,7 +39,6 @@ def run():
             frame = cv2.flip(frame, 1)
         
             faces = face_cascade.detectMultiScale(cropped, 1.1, 5)
-            print('faces:', faces)
 
             for (x, y, w, h) in faces:
                 cv2.putText(frame, 'Detected Face', (int(top_left_x) + 9, int(bottom_right_y) + 12), font, 0.5, (255, 255, 0), 2)
