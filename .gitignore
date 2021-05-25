@@ -5,3 +5,4 @@ aufd
 data
 .vscode
 .idea
+*.pth
