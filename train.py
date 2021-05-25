@@ -36,7 +36,7 @@ summary(model, input_size=(1, 3, 213, 160))
 optimizer = optim.Adam(model.parameters(), lr=1e-4)
 criterion = nn.MSELoss()
 
-num_epochs = 30
+num_epochs = 20
 
 model.train()
 for epoch in range(num_epochs):
