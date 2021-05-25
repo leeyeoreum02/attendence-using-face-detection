@@ -63,11 +63,11 @@ def run():
 
             for (x, y, w, h) in faces:
                 cv2.putText(frame, 'Detected Face', (int(top_left_x) + 9, int(bottom_right_y) + 12), font, 0.5, (255, 255, 0), 2)
-                cv2.imwrite(f'data/train_{data_count}.jpg', cropped, params=[cv2.IMWRITE_JPEG_QUALITY, 100])
-                print(f'capture complete: data\\train_{data_count}.jpg')
+                # cv2.imwrite(f'data/train_{data_count}.jpg', cropped, params=[cv2.IMWRITE_JPEG_QUALITY, 100])
+                # print(f'capture complete: data\\train_{data_count}.jpg')
             
-                if data_count < len(os.listdir('data')):
-                    data_count += 1 
+                # if data_count < len(os.listdir('data')):
+                #     data_count += 1 
                 
             h,w,c = frame.shape
             qImg = QtGui.QImage(frame.data, w, h, w*c, QtGui.QImage.Format_RGB888)
