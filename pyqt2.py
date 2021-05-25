@@ -15,6 +15,8 @@ data_count = 0
 pTime = 0
 cTime = 0
 
+if os.path.exists('data') == False:
+    os.makedirs('data', exist_ok=True)
 
 def run():
     global frame
