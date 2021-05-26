@@ -3,10 +3,18 @@ import threading
 import sys
 import os
 import time
+from PIL import Image
+import numpy as np
 
 from PyQt5 import QtWidgets
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import QLabel
+
+from models import FaceDetector
+
+import torch
+import torch.optim as optim
+from torchvision import transforms
 
 
 font = cv2.FONT_HERSHEY_TRIPLEX
@@ -24,8 +32,20 @@ def run():
     global running
     global data_count
     global pTime, cTime, tm
+
     face_cascade = cv2.CascadeClassifier('haarcascade_frontface.xml')
-    info = ''
+
+    # load model
+    PATH = 'face_detection.pth'
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model = FaceDetector(num_classes=2).to(device)
+    optimizer = optim.Adam(model.parameters(), lr=1e-4)
+    checkpoint = torch.load(PATH)
+    model.load_state_dict(checkpoint['model_state_dict'])
+    optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+    epoch = checkpoint['epoch']
+    loss = checkpoint['loss']
+
     cap = cv2.VideoCapture(0)
     while running:
         ret, frame = cap.read()
@@ -60,6 +80,22 @@ def run():
                         color=(0, 255, 0), thickness=1)
 
             faces = face_cascade.detectMultiScale(cropped, 1.1, 5)
+            
+            # predict
+            if type(faces) is np.ndarray:
+                face = frame[int(bottom_right_y):int(top_left_y), int(top_left_x):int(bottom_right_x)]
+                face = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
+                face = np.float32(face)
+                face = transforms.ToTensor()(face)
+                face = transforms.Normalize(
+                        [0.485, 0.456, 0.406],
+                        [0.229, 0.224, 0.225]
+                    )(face)
+                model.eval()  
+                face = face.to(device)
+                target = model(face[None, ...])
+                target = target > 0.5
+                print(target)
 
             for (x, y, w, h) in faces:
                 cv2.putText(frame, 'Detected Face', (int(top_left_x) + 9, int(bottom_right_y) + 12), font, 0.5, (255, 255, 0), 2)
@@ -87,13 +123,10 @@ def stop():
     print("stoped..")
 
 
-global i
-i = 0
 def capture():
-    global i
     fr = cropped
     cv2.imwrite(f"captured_{tm.tm_year}_{tm.tm_mon}_{tm.tm_mday}_{tm.tm_hour}_{tm.tm_min}_{tm.tm_sec}.jpg", fr, params=[cv2.IMWRITE_JPEG_QUALITY,100])
-    i += 1
+    print(fr.shape)
     print("capture..")
 
 

@@ -93,15 +93,11 @@ with torch.no_grad():
 print(acc.cpu().numpy())
 
 PATH = 'face_detection.pth'
-torch.save(model.state_dict(), PATH)
+# torch.save(model.state_dict(), PATH)
 
-img = Image.open('captured_2021_5_25_16_30_27.jpg').convert('RGB')
-img = transforms.ToTensor()(img)
-img = transforms.Normalize(
-        [0.485, 0.456, 0.406],
-        [0.229, 0.224, 0.225]
-    )(img)
-img = img.to(device)
-target = model(img[None, ...])
-target = target > 0.5
-print(target)
+torch.save({
+            'epoch': epoch,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'loss': loss,
+            }, PATH)
