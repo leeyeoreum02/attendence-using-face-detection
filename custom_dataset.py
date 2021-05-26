@@ -24,11 +24,16 @@ def make_labels(dir: os.PathLike = 'data') -> None:
     onehot_encoder = OneHotEncoder()
     label_encoded = onehot_encoder.fit_transform(temp_cat).toarray()
 
+    columns = [cat_data]
+    print(columns[:10])
+    labels = [label_encoded[:, i] for i in range(len(categories))]
+    columns.extend(labels)
+    print(columns)
 
-    final_data = list(zip(cat_data, label_encoded[:, 0], label_encoded[:, 1]))
+    final_data = list(zip(*columns))
+    print(final_data[:10])
     
     final_df = pd.DataFrame(final_data, columns=['category', '0', '1'])
-
     final_df.to_csv('data/labels.csv')
 
 
