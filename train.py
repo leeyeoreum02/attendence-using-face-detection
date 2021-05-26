@@ -12,6 +12,10 @@ from custom_dataset import split_dataset
 from torchvision import transforms
 from models import FaceDetector
 
+import albumentations as A
+import albumentations.pytorch
+
+
 
 transform = transforms.Compose([
     transforms.ToTensor(),
@@ -19,6 +23,23 @@ transform = transforms.Compose([
         [0.485, 0.456, 0.406],
         [0.229, 0.224, 0.225]
     )
+])
+
+albumentations_transform = A.Compose([
+    A.Resize(200, 200),
+    A.RandomCrop(180, 180),
+    A.OneOf([
+        A.HorizontalFlip(p=1),
+        A.RandomRotate90(p=1),
+        A.VerticalFlip(p=1)
+    ], p=0.5),
+    A.OneOf([
+        A.MotionBlur(p=1),
+        A.OpticalDistortion(p=1),
+        A.GaussNoise(p=1)
+    ], p=0.5),
+    A.pytorch.ToTensor()
+
 ])
 
 dataset = FaceDataset('data', 'data/labels.csv', transform)
