@@ -2,7 +2,7 @@
 /shelf/
 /workspace.xml
 aufd
-data
 .vscode
 .idea
 *.pth
+__pycache__
