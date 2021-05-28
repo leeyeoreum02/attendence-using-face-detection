@@ -6,3 +6,4 @@ aufd
 .idea
 *.pth
 __pycache__
+.DS_STORE
