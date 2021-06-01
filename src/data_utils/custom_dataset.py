@@ -14,6 +14,8 @@ from torch.utils.data import Dataset
 
 from torchvision.datasets import ImageFolder
 
+from torchvision.datasets import ImageFolder
+
 
 def make_labels(dir: os.PathLike = 'data') -> None:
     categories = [category for category in os.listdir(dir)
@@ -87,6 +89,30 @@ class FaceDataset(Dataset):
 
     def __len__(self) -> int:
         return len(self.image_ids)
+
+
+# Testing ImageFolder()
+class FaceDataset_test(Dataset):
+    def __init__(
+        self,
+        dir: os.PathLike,
+        transforms: Sequence[Callable]
+    ) -> None:
+        self.dir = dir
+        self.transforms = transforms
+
+        self.dataset = ImageFolder(root=self.dir, transform=self.transforms, target_transform=None)
+
+        return self.dataset
+
+    def __getitem__(self, index:int) -> Tuple[Tensor]:
+        pass
+
+    def __iter__(self):
+        pass
+
+    def __len__(self) -> int:
+        pass
 
 
 # Testing ImageFolder()
