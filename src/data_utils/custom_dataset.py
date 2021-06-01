@@ -12,6 +12,8 @@ from torchvision import transforms
 
 from torch.utils.data import Dataset
 
+from torchvision.datasets import ImageFolder
+
 
 def make_labels(dir: os.PathLike = 'data') -> None:
     categories = [category for category in os.listdir(dir)
@@ -87,6 +89,31 @@ class FaceDataset(Dataset):
         return len(self.image_ids)
 
 
+# Testing ImageFolder()
+class FaceDataset_test(Dataset):
+    def __init__(
+        self,
+        dir: os.PathLike,
+        transforms: Sequence[Callable]
+    ) -> None:
+        self.dir = dir
+        self.transforms = transforms
+
+        self.dataset = ImageFolder(root=self.dir, transform=self.transforms, target_transform=None)
+
+        return self.dataset
+
+    def __getitem__(self, index:int) -> Tuple[Tensor]:
+        pass
+
+    def __iter__(self):
+        pass
+
+    def __len__(self) -> int:
+        pass
+
+
+
 def split_dataset(dataset_size: int, split_rate: float, num_seed: int = 42) -> Tuple[List]: 
     indices = list(range(dataset_size))
     split_indices = int(np.floor(split_rate * dataset_size))
@@ -97,6 +124,15 @@ def split_dataset(dataset_size: int, split_rate: float, num_seed: int = 42) -> T
     print('\nlen(train_indices) =', len(train_indices), ', len(test_indices) =', len(test_indices), '\n')
 
     return train_indices, test_indices
+
+# test
+def split_dataset_test(dataset, dataset_size, split_rate) -> Tuple[List]:
+    train_size = int((1 - split_rate) * dataset_size)
+    test_size = dataset_size - train_size
+
+    train_dataset, test_dataset = torch.utils.data.random_split(dataset, [train_size, test_size])
+
+    return train_dataset, test_dataset
 
 
 if __name__ == '__main__':
