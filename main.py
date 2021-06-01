@@ -10,7 +10,7 @@ from PyQt5 import QtWidgets
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import QLabel
 
-from models import FaceDetector
+from src.models.python.models import Efficientnet
 
 import torch
 import torch.optim as optim
@@ -33,12 +33,12 @@ def run():
     global data_count
     global pTime, cTime, tm
 
-    face_cascade = cv2.CascadeClassifier('haarcascade_frontface.xml')
+    face_cascade = cv2.CascadeClassifier('src/models/xml/haarcascade_frontface.xml')
 
     # load model
-    PATH = 'face_detection.pth'
+    PATH = 'src/models/pretrained/face_detection.pth'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model = FaceDetector(num_classes=2).to(device)
+    model = Efficientnet(num_classes=2).to(device)
     optimizer = optim.Adam(model.parameters(), lr=1e-4)
     checkpoint = torch.load(PATH)
     model.load_state_dict(checkpoint['model_state_dict'])

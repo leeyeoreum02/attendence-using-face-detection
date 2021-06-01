@@ -6,11 +6,11 @@ from torch import nn, Tensor
 from torch.utils.data import Dataset, DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
 from torchinfo import summary
-from custom_dataset import FaceDataset
-from custom_dataset import split_dataset
+from data_utils.custom_dataset import FaceDataset
+from data_utils.custom_dataset import split_dataset
 
 from torchvision import transforms
-from models import FaceDetector
+from models.python.models import Efficientnet
 
 import albumentations as A
 import albumentations.pytorch
@@ -47,11 +47,11 @@ train_indices, test_indices = split_dataset(len(dataset), 0.2)
 train_sampler = SubsetRandomSampler(train_indices)
 test_sampler = SubsetRandomSampler(test_indices)
 
-train_loader = DataLoader(dataset, batch_size=32, sampler=train_sampler, num_workers=0)
+train_loader = DataLoader(dataset, batch_size=16, sampler=train_sampler, num_workers=0)
 test_loader = DataLoader(dataset, batch_size=8, sampler=test_sampler, num_workers=0)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model = FaceDetector(num_classes=2).to(device)
+model = Efficientnet(num_classes=2).to(device)
 summary(model, input_size=(1, 3, 213, 160))
 
 optimizer = optim.Adam(model.parameters(), lr=1e-4)
@@ -92,7 +92,7 @@ with torch.no_grad():
 
 print(acc.cpu().numpy())
 
-PATH = 'face_detection.pth'
+PATH = 'src/models/pretrained/efficientnet.pth'
 # torch.save(model.state_dict(), PATH)
 
 torch.save({
