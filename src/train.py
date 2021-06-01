@@ -50,6 +50,16 @@ test_sampler = SubsetRandomSampler(test_indices)
 train_loader = DataLoader(dataset, batch_size=32, sampler=train_sampler, num_workers=0)
 test_loader = DataLoader(dataset, batch_size=8, sampler=test_sampler, num_workers=0)
 
+# test
+'''
+dataset = FaceDataset_test('data', transform)
+train_indices, test_indices = split_dataset_test(dataset, len(dataset), 0.2)
+# __len__, __iter 구현 안해서 샘플러는 스킵
+train_loader = DataLoader(train_indices, batch_size=32, num_workers=0)
+train_loader = DataLoader(test_indices, batch_size=8, num_workers=0)
+'''
+
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = FaceDetector(num_classes=2).to(device)
 summary(model, input_size=(1, 3, 213, 160))
