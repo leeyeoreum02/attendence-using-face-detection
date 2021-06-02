@@ -36,7 +36,7 @@ def run():
     face_cascade = cv2.CascadeClassifier('src/models/xml/haarcascade_frontface.xml')
 
     # load model
-    PATH = 'src/models/pretrained/face_detection.pth'
+    PATH = 'src/models/pretrained/efficientnet.pth'
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = Efficientnet(num_classes=2).to(device)
     optimizer = optim.Adam(model.parameters(), lr=1e-4)

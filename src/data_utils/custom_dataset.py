@@ -1,4 +1,5 @@
 import os
+import matplotlib.pyplot as plt
 from typing import Tuple, Sequence, Callable, List
 from PIL import Image
 import pandas as pd
@@ -25,13 +26,13 @@ def make_labels(dir: os.PathLike = 'data') -> None:
     label_encoded = onehot_encoder.fit_transform(temp_cat).toarray()
 
     columns = [cat_data]
-    print(columns[:10])
+    # print(columns[:10])
     labels = [label_encoded[:, i] for i in range(len(categories))]
     columns.extend(labels)
-    print(columns)
+    # print(columns)
 
     final_data = list(zip(*columns))
-    print(final_data[:10])
+    # print(final_data[:10])
     
     final_df = pd.DataFrame(final_data, columns=['category', '0', '1'])
     final_df.to_csv('data/labels.csv')
@@ -42,7 +43,7 @@ class FaceDataset(Dataset):
         self,
         dir: os.PathLike,
         image_ids: os.PathLike,
-        transforms: Sequence[Callable]
+        transforms: Sequence[Callable] = None
     ) -> None:
         self.dir = dir
         self.transforms = transforms
@@ -100,15 +101,9 @@ def split_dataset(dataset_size: int, split_rate: float, num_seed: int = 42) -> T
 
 
 if __name__ == '__main__':
-    make_labels()
+    # make_labels()
 
-    transforms = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize(
-            [0.485, 0.456, 0.406],
-            [0.229, 0.224, 0.225]
-        )
-    ])
-
-    face = FaceDataset('data', 'data/labels.csv', transforms)
-    print(face[978])
+    face = FaceDataset('data', 'data/labels.csv')
+    plt.imshow(face[1][0])
+    plt.savefig('examples/test.png')
+    print(face[1][1])
